@@ -24,10 +24,10 @@ import {
 import { profileResource, profileRoutes } from "./pages/profiles";
 import { authRoutes } from "./pages/auth";
 
-// Import kampanii
-import { campaignResource, campaignRoutes } from "./pages/campaign";
+
 
 import LandingPage from "./pages/Landing";
+import { webCampaignResource, webCampaignRoutes } from "./pages/web-campaign-steps";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
         authProvider={authProvider}
         routerProvider={routerBindings}
         resources={[
-          campaignResource,
+          webCampaignResource,
           websiteAnalysisResource,
           marketingStrategyResource,
           googleAdsCampaignResource,
@@ -82,7 +82,7 @@ function App() {
               </Authenticated>
             }
           >
-            {...campaignRoutes}
+            {...webCampaignRoutes}
             {...websiteAnalysisRoutes}
             {...marketingStrategyRoutes}
             {...googleAdsCampaignRoutes}

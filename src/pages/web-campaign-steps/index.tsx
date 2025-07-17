@@ -16,7 +16,7 @@ export { CampaignStep5 } from './CampaignStep5';
 export { CampaignDashboard } from './CampaignDashboard';
 
 // Routes - zwracamy JSX bezpośrednio, nie funkcję komponenta
-export const campaignRoutes = [
+export const webCampaignRoutes = [
   <Route key="campaign-dashboard" path="/campaign" element={<CampaignDashboard />} />,
   <Route key="campaign-step1" path="/campaign/step1" element={<CampaignStep1 />} />,
   <Route key="campaign-step2" path="/campaign/step2" element={<CampaignStep2 />} />,
@@ -26,7 +26,7 @@ export const campaignRoutes = [
 ];
 
 // Resource definition - opcjonalnie, jeśli chcesz mieć kampanię jako resource w Refine
-export const campaignResource = {
+export const webCampaignResource = {
   name: "campaigns",
   list: "/campaign", // Dashboard kampanii
   create: "/campaign/step1",

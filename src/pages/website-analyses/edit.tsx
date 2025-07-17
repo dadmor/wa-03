@@ -1,7 +1,6 @@
 import { useForm } from "@refinedev/react-hook-form";
 import { useNavigation } from "@refinedev/core";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import {
   Select,
   SelectContent,
@@ -10,9 +9,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, ArrowLeft, Save } from "lucide-react";
+import { X, Plus, ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Button, Input, Label, Textarea } from "@/components/ui";
+import { Button, Input, Textarea } from "@/components/ui";
+import { FlexBox, GridBox } from "@/components/shared";
+import { Lead } from "@/components/reader";
+import { Form, FormActions, FormField } from "@/components/form";
 import { useLoading } from "@/utility";
 
 const industries = [
@@ -100,39 +102,37 @@ export const WebsiteAnalysisEdit = () => {
 
   return (
     <>
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => show("website_analyses", record.id!)}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Details
-            </Button>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            ID: #{String(record.id).slice(0, 8)}
-          </div>
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Edit Website Analysis
-        </h1>
-        <p className="text-muted-foreground">
-          Update the website analysis information
-        </p>
-      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => show("website_analyses", record.id!)}
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to Details
+      </Button>
+
+      <FlexBox>
+        <Lead
+          title="Edit Website Analysis"
+          description={`Update the website analysis information • ID: #${String(
+            record.id
+          ).slice(0, 8)}`}
+        />
+      </FlexBox>
 
       <Card>
         <CardHeader>
           <CardTitle>Website Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onFinish)} className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="url">Website URL *</Label>
+          <Form onSubmit={handleSubmit(onFinish)}>
+            <GridBox variant="1-2-2">
+              <FormField
+                label="Website URL"
+                htmlFor="url"
+                error={errors.url?.message as string}
+                required
+              >
                 <Input
                   id="url"
                   type="url"
@@ -145,15 +145,13 @@ export const WebsiteAnalysisEdit = () => {
                     },
                   })}
                 />
-                {errors.url && (
-                  <p className="text-sm text-red-500">
-                    {errors.url.message as string}
-                  </p>
-                )}
-              </div>
+              </FormField>
 
-              <div className="space-y-2">
-                <Label htmlFor="industry">Industry *</Label>
+              <FormField
+                label="Industry"
+                error={errors.industry?.message as string}
+                required
+              >
                 <Select
                   value={watch("industry")}
                   onValueChange={(value) => setValue("industry", value)}
@@ -169,16 +167,15 @@ export const WebsiteAnalysisEdit = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.industry && (
-                  <p className="text-sm text-red-500">
-                    {errors.industry.message as string}
-                  </p>
-                )}
-              </div>
-            </div>
+              </FormField>
+            </GridBox>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+            <FormField
+              label="Description"
+              htmlFor="description"
+              error={errors.description?.message as string}
+              required
+            >
               <Textarea
                 id="description"
                 placeholder="Describe the website's purpose, target audience, and main features..."
@@ -191,27 +188,31 @@ export const WebsiteAnalysisEdit = () => {
                   },
                 })}
               />
-              {errors.description && (
-                <p className="text-sm text-red-500">
-                  {errors.description.message as string}
-                </p>
-              )}
-            </div>
+            </FormField>
 
-            <div className="space-y-2">
-              <Label>Keywords *</Label>
-              <div className="flex gap-2">
+            <FormField
+              label="Keywords"
+              error={
+                keywords.length === 0
+                  ? "At least one keyword is required"
+                  : undefined
+              }
+              required
+            >
+              <FlexBox variant="start">
                 <Input
                   placeholder="Add a keyword..."
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
                   onKeyPress={handleKeywordKeyPress}
+                  className="flex-1"
                 />
                 <Button type="button" onClick={addKeyword} variant="outline">
                   <Plus className="w-4 h-4" />
                 </Button>
-              </div>
-              {keywords.length > 0 ? (
+              </FlexBox>
+
+              {keywords.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {keywords.map((keyword, index) => (
                     <Badge
@@ -230,31 +231,25 @@ export const WebsiteAnalysisEdit = () => {
                     </Badge>
                   ))}
                 </div>
-              ) : (
-                <p className="text-sm text-red-500">
-                  At least one keyword is required
-                </p>
               )}
-            </div>
+            </FormField>
 
-            <div className="pt-4 border-t">
-              <div className="grid gap-4 md:grid-cols-2 text-sm text-muted-foreground">
+            {record.created_at && (
+              <FlexBox variant="end" className="text-xs text-muted-foreground">
                 <div>
-                  <span className="font-medium">Created:</span>{" "}
-                  {record.created_at
-                    ? new Date(record.created_at).toLocaleDateString()
-                    : "-"}
+                  <span>Created:</span>
+                  {new Date(record.created_at).toLocaleDateString()}
                 </div>
-                <div>
-                  <span className="font-medium">Last Updated:</span>{" "}
-                  {record.updated_at
-                    ? new Date(record.updated_at).toLocaleDateString()
-                    : "-"}
-                </div>
-              </div>
-            </div>
+                {record.updated_at && (
+                  <div>
+                    <span>Last Updated:</span>
+                    {new Date(record.updated_at).toLocaleDateString()}
+                  </div>
+                )}
+              </FlexBox>
+            )}
 
-            <div className="flex justify-end space-x-4 pt-6 border-t">
+            <FormActions>
               <Button
                 type="button"
                 variant="outline"
@@ -266,11 +261,10 @@ export const WebsiteAnalysisEdit = () => {
                 type="submit"
                 disabled={isSubmitting || keywords.length === 0}
               >
-                <Save className="w-4 h-4 mr-2" />
                 {isSubmitting ? "Saving..." : "Save Changes"}
               </Button>
-            </div>
-          </form>
+            </FormActions>
+          </Form>
         </CardContent>
       </Card>
     </>
