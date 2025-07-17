@@ -119,9 +119,9 @@ export const GoogleAdsCampaignList = () => {
   const { create, edit, show } = useNavigation();
   const { mutate: deleteCampaign } = useDelete();
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
+  if (isLoading) return <div className="p-6">Ładowanie...</div>;
   if (isError)
-    return <div className="p-6 text-red-500">Error loading campaigns</div>;
+    return <div className="p-6 text-red-500">Błąd podczas ładowania kampanii</div>;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -140,12 +140,12 @@ export const GoogleAdsCampaignList = () => {
     <>
       <FlexBox>
         <Lead
-          title={`Google Ads Campaigns`}
-          description={`Manage your Google Ads campaigns`}
+          title={`Kampanie Google Ads`}
+          description={`Zarządzaj swoimi kampaniami Google Ads`}
         ></Lead>
         <Button onClick={() => create("google_ads_campaigns")}>
           <Plus className="w-4 h-4 mr-2" />
-          Create New Campaign
+          Utwórz nową kampanię manualnie
         </Button>
       </FlexBox>
 
@@ -153,32 +153,32 @@ export const GoogleAdsCampaignList = () => {
         variant="start"
         className="flex-col sm:flex-row  sm:items-center"
       >
-        <div className="flex-1 max-w-sm">
+        <FlexBox variant="start" className="flex-1 max-w-sm">
           <Input
-            placeholder="Search campaigns..."
+            placeholder="Szukaj kampanii..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
+        </FlexBox>
 
         <FlexBox variant="start">
           <Select value={selectedUrl} onValueChange={setSelectedUrl}>
             <SelectTrigger className="w-64">
-              <SelectValue placeholder="Filter by website..." />
+              <SelectValue placeholder="Filtruj według strony..." />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All websites</SelectItem>
+              <SelectItem value="all">Wszystkie strony</SelectItem>
               {urlsData?.data?.map((analysis: any) => (
                 <SelectItem key={analysis.id} value={analysis.id}>
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2">
+                  <FlexBox className="w-full">
+                    <FlexBox variant="start">
                       <Globe className="w-4 h-4" />
                       {analysis.url}
-                    </div>
+                    </FlexBox>
                     <span className="text-xs text-muted-foreground ml-2">
                       #{analysis.id.slice(0, 8)}
                     </span>
-                  </div>
+                  </FlexBox>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -196,13 +196,13 @@ export const GoogleAdsCampaignList = () => {
         </FlexBox>
       </FlexBox>
 
-      {/* Active Filters */}
+      {/* Aktywne filtry */}
       {(searchTerm || (selectedUrl && selectedUrl !== "all")) && (
         <FlexBox variant="start">
-          <span className="text-sm font-medium">Active filters:</span>
+          <span className="text-sm font-medium">Aktywne filtry:</span>
           {searchTerm && (
             <Badge variant="secondary" className="gap-1">
-              Name: "{searchTerm}"
+              Nazwa: "{searchTerm}"
               <Button
                 variant="ghost"
                 size="sm"
@@ -215,7 +215,7 @@ export const GoogleAdsCampaignList = () => {
           )}
           {selectedUrl && selectedUrl !== "all" && (
             <Badge variant="secondary" className="gap-1">
-              Website:{" "}
+              Strona:{" "}
               {
                 urlsData?.data?.find((analysis) => analysis.id === selectedUrl)
                   ?.url
@@ -239,7 +239,7 @@ export const GoogleAdsCampaignList = () => {
               setSelectedUrl("all");
             }}
           >
-            Clear all
+            Wyczyść wszystkie
           </Button>
         </FlexBox>
       )}
@@ -251,9 +251,16 @@ export const GoogleAdsCampaignList = () => {
               <FlexBox>
                 <FlexBox>
                   <Badge variant={getStatusColor(campaign.status)}>
-                    {campaign.status}
+                    {campaign.status === "active" ? "aktywna" : 
+                     campaign.status === "paused" ? "wstrzymana" : 
+                     campaign.status === "draft" ? "szkic" : campaign.status}
                   </Badge>
-                  <Badge variant="outline">{campaign.campaign_type}</Badge>
+                  <Badge variant="outline">
+                    {campaign.campaign_type === "search" ? "wyszukiwarka" :
+                     campaign.campaign_type === "display" ? "sieć reklamowa" :
+                     campaign.campaign_type === "shopping" ? "zakupy" :
+                     campaign.campaign_type === "video" ? "wideo" : campaign.campaign_type}
+                  </Badge>
                 </FlexBox>
                 <span className="text-sm text-muted-foreground">
                   #{campaign.id.slice(0, 8)}
@@ -263,16 +270,16 @@ export const GoogleAdsCampaignList = () => {
 
               <CardDescription className="text-sm text-muted-foreground mt-3">
                 {campaign.strategy && (
-                  <div className="flex items-center gap-1 mb-1">
+                  <FlexBox variant="start" className="gap-1 mb-1">
                     <Target className="w-4 h-4" />
-                    Strategy: {campaign.strategy.title}
-                  </div>
+                    Strategia: {campaign.strategy.title}
+                  </FlexBox>
                 )}
                 {campaign.strategy?.website_analysis?.url && (
-                  <div className="flex items-center gap-1 mb-1">
+                  <FlexBox variant="start" className="gap-1 mb-1">
                     <Globe className="w-4 h-4" />
                     {campaign.strategy.website_analysis.url}
-                  </div>
+                  </FlexBox>
                 )}
               </CardDescription>
             </CardHeader>
@@ -280,37 +287,37 @@ export const GoogleAdsCampaignList = () => {
             <CardContent>
               {campaign.budget_daily && (
                 <FlexBox>
-                  <span className="text-sm font-medium flex items-center gap-1">
+                  <FlexBox variant="start" className="text-sm font-medium gap-1">
                     <DollarSign className="w-4 h-4" />
-                    Daily Budget
-                  </span>
+                    Budżet dzienny
+                  </FlexBox>
                   <Badge variant="outline">${campaign.budget_daily}</Badge>
                 </FlexBox>
               )}
 
               {campaign.budget_total && (
                 <FlexBox>
-                  <span className="text-sm font-medium">Total Budget</span>
+                  <span className="text-sm font-medium">Budżet całkowity</span>
                   <Badge variant="outline">${campaign.budget_total}</Badge>
                 </FlexBox>
               )}
 
               {(campaign.start_date || campaign.end_date) && (
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <FlexBox variant="start" className="gap-1 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4" />
                   {campaign.start_date &&
-                    new Date(campaign.start_date).toLocaleDateString()}
+                    new Date(campaign.start_date).toLocaleDateString("pl-PL")}
                   {campaign.start_date && campaign.end_date && " - "}
                   {campaign.end_date &&
-                    new Date(campaign.end_date).toLocaleDateString()}
-                </div>
+                    new Date(campaign.end_date).toLocaleDateString("pl-PL")}
+                </FlexBox>
               )}
 
               {campaign.target_locations &&
                 campaign.target_locations.length > 0 && (
-                  <div className="flex items-center gap-1">
+                  <FlexBox variant="start" className="gap-1">
                     <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <div className="flex flex-wrap gap-1">
+                    <FlexBox variant="start" className="flex-wrap gap-1">
                       {campaign.target_locations
                         .slice(0, 2)
                         .map((location: string, index: number) => (
@@ -324,27 +331,27 @@ export const GoogleAdsCampaignList = () => {
                         ))}
                       {campaign.target_locations.length > 2 && (
                         <Badge variant="outline" className="text-xs">
-                          +{campaign.target_locations.length - 2} more
+                          +{campaign.target_locations.length - 2} więcej
                         </Badge>
                       )}
-                    </div>
-                  </div>
+                    </FlexBox>
+                  </FlexBox>
                 )}
 
               {campaign.keywords_final &&
                 campaign.keywords_final.length > 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    {campaign.keywords_final.length} keywords
-                  </div>
+                  <FlexBox variant="start" className="text-sm text-muted-foreground">
+                    {campaign.keywords_final.length} słów kluczowych
+                  </FlexBox>
                 )}
 
-              <div className="text-xs text-muted-foreground">
-                Created: {new Date(campaign.created_at).toLocaleDateString()}
-              </div>
+              <FlexBox variant="start" className="text-xs text-muted-foreground">
+                Utworzono: {new Date(campaign.created_at).toLocaleDateString("pl-PL")}
+              </FlexBox>
             </CardContent>
 
             <CardFooter>
-              <FlexBox>
+              <FlexBox variant="start" className="space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -365,7 +372,7 @@ export const GoogleAdsCampaignList = () => {
                 size="sm"
                 onClick={() => {
                   if (
-                    confirm("Are you sure you want to delete this campaign?")
+                    confirm("Czy na pewno chcesz usunąć tę kampanię?")
                   ) {
                     deleteCampaign({
                       resource: "google_ads_campaigns",
@@ -381,13 +388,13 @@ export const GoogleAdsCampaignList = () => {
         ))}
       </GridBox>
 
-      {/* Pagination */}
+      {/* Paginacja */}
       <PaginationSwith
         current={current}
         pageSize={pageSize}
         total={data?.total || 0}
         setCurrent={setCurrent}
-        itemName="campaigns"
+        itemName="kampanie"
       />
     </>
   );

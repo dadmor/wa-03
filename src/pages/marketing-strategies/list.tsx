@@ -32,19 +32,19 @@ export const MarketingStrategyList = () => {
     <>
       <FlexBox>
         <Lead
-          title={`Marketing Strategies`}
-          description={`Manage your marketing strategies`}
+          title={`Strategie Marketingowe`}
+          description={`Zarządzaj swoimi strategiami marketingowymi`}
         />
 
         <Button onClick={() => create("marketing_strategies")}>
           <Plus className="w-4 h-4 mr-2" />
-          Create New Strategy
+          Utwórz Nową Strategię
         </Button>
       </FlexBox>
 
       <FlexBox>
         <Input
-          placeholder="Search strategies..."
+          placeholder="Szukaj strategii..."
           className="max-w-sm"
           onChange={(e) => {
             setFilters([
@@ -64,7 +64,7 @@ export const MarketingStrategyList = () => {
             <CardHeader>
               <FlexBox>
                 <Badge variant="secondary" className="mb-2">
-                  {strategy.industry_override || "General"}
+                  {strategy.industry_override || "Ogólna"}
                 </Badge>
                 <span className="text-sm text-muted-foreground">
                   #{strategy.id.slice(0, 8)}
@@ -82,24 +82,24 @@ export const MarketingStrategyList = () => {
 
             <CardContent>
               <FlexBox>
-                <span className="text-sm font-medium flex items-center gap-1">
+                <FlexBox variant="start" className="text-sm font-medium gap-1">
                   <DollarSign className="w-4 h-4" />
-                  Budget Recommendation
-                </span>
+                  Rekomendowany Budżet
+                </FlexBox>
                 <Badge variant="outline">
-                  ${strategy.budget_recommendation?.toLocaleString()}
+                  {strategy.budget_recommendation?.toLocaleString('pl-PL')} zł
                 </Badge>
               </FlexBox>
-              <div className="text-sm text-muted-foreground">
+              <FlexBox variant="start" className="text-sm text-muted-foreground">
                 {strategy.notes?.substring(0, 80)}...
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Created: {new Date(strategy.created_at).toLocaleDateString()}
-              </div>
+              </FlexBox>
+              <FlexBox variant="start" className="text-xs text-muted-foreground">
+                Utworzono: {new Date(strategy.created_at).toLocaleDateString('pl-PL')}
+              </FlexBox>
             </CardContent>
 
             <CardFooter>
-              <FlexBox>
+              <FlexBox variant="start" className="space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -120,7 +120,7 @@ export const MarketingStrategyList = () => {
                 size="sm"
                 onClick={() => {
                   if (
-                    confirm("Are you sure you want to delete this strategy?")
+                    confirm("Czy na pewno chcesz usunąć tę strategię?")
                   ) {
                     deleteStrategy({
                       resource: "marketing_strategies",
@@ -136,13 +136,13 @@ export const MarketingStrategyList = () => {
         ))}
       </GridBox>
 
-      {/* Pagination */}
+      {/* Paginacja */}
       <PaginationSwith
         current={current}
         pageSize={pageSize}
         total={data?.total || 0}
         setCurrent={setCurrent}
-        itemName="strategies"
+        itemName="strategie"
       />
     </>
   );

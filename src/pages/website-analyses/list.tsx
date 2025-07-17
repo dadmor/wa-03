@@ -32,18 +32,18 @@ export const WebsiteAnalysisList = () => {
     <>
       <FlexBox>
         <Lead
-          title={`Website Analyses`}
-          description={`Manage your website analyses`}
+          title={`Analizy stron internetowych`}
+          description={`Zarządzaj swoimi analizami stron internetowych`}
         ></Lead>
         <Button onClick={() => create("website_analyses")}>
           <Plus className="w-4 h-4 mr-2" />
-          Create New Analysis
+          Utwórz nową analizę manualnie
         </Button>
       </FlexBox>
 
       <FlexBox>
         <Input
-          placeholder="Search analyses..."
+          placeholder="Szukaj analiz..."
           className="max-w-sm"
           onChange={(e) => {
             setFilters([
@@ -85,7 +85,7 @@ export const WebsiteAnalysisList = () => {
             </CardHeader>
 
             <CardContent>
-              <div className="flex flex-wrap gap-1">
+              <FlexBox variant="start" className="flex-wrap gap-1">
                 {analysis.keywords
                   ?.slice(0, 3)
                   .map((keyword: string, index: number) => (
@@ -95,19 +95,19 @@ export const WebsiteAnalysisList = () => {
                   ))}
                 {analysis.keywords?.length > 3 && (
                   <Badge variant="outline" className="text-xs">
-                    +{analysis.keywords.length - 3} more
+                    +{analysis.keywords.length - 3} więcej
                   </Badge>
                 )}
-              </div>
-              <div className="text-sm text-muted-foreground">
+              </FlexBox>
+              <FlexBox variant="start" className="text-sm text-muted-foreground">
                 <span>
-                  {new Date(analysis.created_at).toLocaleDateString()}
+                  {new Date(analysis.created_at).toLocaleDateString('pl-PL')}
                 </span>
-              </div>
+              </FlexBox>
             </CardContent>
 
             <CardFooter>
-              <div className="flex space-x-2">
+              <FlexBox variant="start" className="space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -122,13 +122,13 @@ export const WebsiteAnalysisList = () => {
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
-              </div>
+              </FlexBox>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => {
                   if (
-                    confirm("Are you sure you want to delete this analysis?")
+                    confirm("Czy na pewno chcesz usunąć tę analizę?")
                   ) {
                     deleteAnalysis({
                       resource: "website_analyses",
@@ -150,7 +150,7 @@ export const WebsiteAnalysisList = () => {
         pageSize={pageSize}
         total={data?.total || 0}
         setCurrent={setCurrent}
-        itemName="analyses"
+        itemName="analizy"
       />
     </>
   );
