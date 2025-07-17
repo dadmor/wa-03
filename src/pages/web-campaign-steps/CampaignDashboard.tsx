@@ -5,6 +5,17 @@ import { Lead } from "@/components/reader";
 import { Button } from "@/components/ui/button";
 import { useFormSchemaStore } from "@/utility/formSchemaStore";
 import { FlexBox, GridBox } from "@/components/shared";
+import { 
+  Zap, 
+  Check, 
+  Eye, 
+  Edit3, 
+  RefreshCw, 
+  BarChart3, 
+  Archive, 
+  TrendingUp,
+  Rocket
+} from "lucide-react";
 
 export const CampaignDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -25,9 +36,7 @@ export const CampaignDashboard: React.FC = () => {
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
           <FlexBox variant="start" className="mb-4">
             <div className="p-3 bg-blue-100 rounded-lg">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
+              <Zap className="w-8 h-8 text-blue-600" />
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Kreator kampanii AI</h2>
@@ -38,41 +47,29 @@ export const CampaignDashboard: React.FC = () => {
           <GridBox variant="1-2-2" className="gap-4">
             <div className="space-y-2">
               <FlexBox variant="start" className="text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>Automatyczna analiza strony WWW</span>
               </FlexBox>
               <FlexBox variant="start" className="text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>Generowanie grupy docelowej</span>
               </FlexBox>
               <FlexBox variant="start" className="text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>Sugestie budżetu i strategii</span>
               </FlexBox>
             </div>
             <div className="space-y-2">
               <FlexBox variant="start" className="text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>Analiza branży i konkurencji</span>
               </FlexBox>
               <FlexBox variant="start" className="text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>Pełna edycja i dostosowanie</span>
               </FlexBox>
               <FlexBox variant="start" className="text-sm text-gray-700">
-                <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+                <Check className="w-4 h-4 text-green-500" />
                 <span>Eksport gotowej strategii</span>
               </FlexBox>
             </div>
@@ -84,7 +81,8 @@ export const CampaignDashboard: React.FC = () => {
               className="w-full md:w-auto"
               size="lg"
             >
-              🚀 Rozpocznij nową kampanię
+              <Rocket className="w-4 h-4 mr-2" />
+              Rozpocznij nową kampanię
             </Button>
           </div>
         </div>
@@ -125,19 +123,22 @@ export const CampaignDashboard: React.FC = () => {
                 variant="outline"
                 onClick={() => navigate("/campaign/step4")}
               >
-                👁️ Podgląd
+                <Eye className="w-4 h-4 mr-2" />
+                Podgląd
               </Button>
               <Button 
                 variant="outline"
                 onClick={() => navigate("/campaign/step5")}
               >
-                ✏️ Edytuj
+                <Edit3 className="w-4 h-4 mr-2" />
+                Edytuj
               </Button>
               <Button 
                 variant="outline"
                 onClick={() => navigate("/campaign/step1")}
               >
-                🔄 Nowa wersja
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Nowa wersja
               </Button>
             </FlexBox>
           </div>
@@ -153,9 +154,7 @@ export const CampaignDashboard: React.FC = () => {
               className="p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow text-left"
             >
               <FlexBox variant="start" className="mb-2">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
+                <BarChart3 className="w-5 h-5 text-blue-600" />
                 <span className="font-medium">Analizy stron</span>
               </FlexBox>
               <p className="text-sm text-gray-600">Zobacz wszystkie przeprowadzone analizy</p>
@@ -166,9 +165,7 @@ export const CampaignDashboard: React.FC = () => {
               className="p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow text-left"
             >
               <FlexBox variant="start" className="mb-2">
-                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
+                <Archive className="w-5 h-5 text-purple-600" />
                 <span className="font-medium">Strategie</span>
               </FlexBox>
               <p className="text-sm text-gray-600">Zarządzaj strategiami marketingowymi</p>
@@ -179,9 +176,7 @@ export const CampaignDashboard: React.FC = () => {
               className="p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow text-left"
             >
               <FlexBox variant="start" className="mb-2">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
+                <TrendingUp className="w-5 h-5 text-green-600" />
                 <span className="font-medium">Google Ads</span>
               </FlexBox>
               <p className="text-sm text-gray-600">Kampanie reklamowe Google</p>
