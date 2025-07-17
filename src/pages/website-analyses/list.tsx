@@ -13,7 +13,6 @@ import { Lead } from "@/components/reader";
 import { useLoading } from "@/utility";
 import { Badge, Button, Input } from "@/components/ui";
 
-
 export const WebsiteAnalysisList = () => {
   const {
     tableQuery: { data, isLoading, isError },
@@ -21,10 +20,18 @@ export const WebsiteAnalysisList = () => {
     setCurrent,
     pageSize,
     setFilters,
-  } = useTable();
+  } = useTable({
+    sorters: {
+      initial: [
+        {
+          field: "updated_at",
+          order: "desc",
+        },
+      ],
+    },
+  });
   const { create, edit, show } = useNavigation();
   const { mutate: deleteAnalysis } = useDelete();
-
   const init = useLoading({ isLoading, isError });
   if (init) return init;
 
@@ -99,10 +106,11 @@ export const WebsiteAnalysisList = () => {
                   </Badge>
                 )}
               </FlexBox>
-              <FlexBox variant="start" className="text-sm text-muted-foreground">
-                <span>
-                  {new Date(analysis.created_at).toLocaleDateString('pl-PL')}
-                </span>
+              <FlexBox
+                variant="start"
+                className="text-sm text-muted-foreground"
+              >
+                {new Date(analysis.created_at).toLocaleDateString("pl-PL")}
               </FlexBox>
             </CardContent>
 
@@ -127,9 +135,7 @@ export const WebsiteAnalysisList = () => {
                 variant="destructive"
                 size="sm"
                 onClick={() => {
-                  if (
-                    confirm("Czy na pewno chcesz usunąć tę analizę?")
-                  ) {
+                  if (confirm("Czy na pewno chcesz usunąć tę analizę?")) {
                     deleteAnalysis({
                       resource: "website_analyses",
                       id: analysis.id,

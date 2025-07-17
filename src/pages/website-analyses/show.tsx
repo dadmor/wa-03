@@ -17,6 +17,7 @@ import {
 import { FlexBox, GridBox } from "@/components/shared";
 import { Lead } from "@/components/reader";
 import { Badge, Button, Separator } from "@/components/ui";
+import { useLoading } from "@/utility";
 
 export const WebsiteAnalysisShow = () => {
   const { queryResult } = useShow();
@@ -40,23 +41,14 @@ export const WebsiteAnalysisShow = () => {
       mode: "off",
     },
   });
+  const init = useLoading({ isLoading, isError });
+  if (init) return init;
 
-  if (isLoading) {
-    return (
-      <div className="p-6 mx-auto">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-64 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isError || !record) {
+  if (!record) {
     return (
       <div className="p-6 mx-auto">
         <div className="text-center py-12">
-          <p className="text-red-500 text-lg">Error loading analysis</p>
+          <p className="text-red-500 text-lg">Analysis not found</p>
           <Button className="mt-4" onClick={() => list("website_analyses")}>
             Back to List
           </Button>

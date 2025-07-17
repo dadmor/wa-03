@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Plus, ArrowLeft, Save } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button, Input, Label, Textarea } from "@/components/ui";
+import { useLoading } from "@/utility";
 
 const industries = [
   "Technology",
@@ -43,8 +44,10 @@ export const WebsiteAnalysisEdit = () => {
   } = useForm();
 
   const data = queryResult?.data;
-  const isLoading = queryResult?.isLoading;
+  const isLoading = queryResult?.isLoading ?? false;
+  const isError = queryResult?.isError ?? false;
   const record = data?.data;
+  const init = useLoading({ isLoading, isError });
 
   useEffect(() => {
     if (record) {
@@ -80,16 +83,7 @@ export const WebsiteAnalysisEdit = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="p-6 max-w-4xl mx-auto">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-96 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-    );
-  }
+  if (init) return init;
 
   if (!record) {
     return (

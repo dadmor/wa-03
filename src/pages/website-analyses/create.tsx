@@ -11,7 +11,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { X, Plus, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { Button, Input, Label, Textarea } from "@/components/ui";
+import { Button, Input, Textarea } from "@/components/ui";
+import { 
+  FlexBox, 
+  GridBox, 
+} from "@/components/shared";
+import { Lead } from "@/components/reader";
+import { Form, FormActions, FormField } from "@/components/form";
 
 const industries = [
   "Technology",
@@ -63,32 +69,35 @@ export const WebsiteAnalysisCreate = () => {
 
   return (
     <>
-      <div className="mb-6">
-        <div className="flex items-center gap-4 mb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => list("website_analyses")}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to List
-          </Button>
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Create Website Analysis
-        </h1>
-        <p className="text-muted-foreground">Add a new website for analysis</p>
-      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => list("website_analyses")}
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to List
+      </Button>
+
+      <FlexBox>
+        <Lead
+          title="Create Website Analysis"
+          description="Add a new website for analysis"
+        />
+      </FlexBox>
 
       <Card>
         <CardHeader>
           <CardTitle>Website Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onFinish)} className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="url">Website URL *</Label>
+          <Form onSubmit={handleSubmit(onFinish)}>
+            <GridBox variant="1-2-2">
+              <FormField 
+                label="Website URL" 
+                htmlFor="url" 
+                error={errors.url?.message as string}
+                required
+              >
                 <Input
                   id="url"
                   type="url"
@@ -101,16 +110,17 @@ export const WebsiteAnalysisCreate = () => {
                     },
                   })}
                 />
-                {errors.url && (
-                  <p className="text-sm text-red-500">
-                    {errors.url.message as string}
-                  </p>
-                )}
-              </div>
+              </FormField>
 
-              <div className="space-y-2">
-                <Label htmlFor="industry">Industry *</Label>
-                <Select onValueChange={(value) => setValue("industry", value)}>
+              <FormField 
+                label="Industry" 
+                error={errors.industry?.message as string}
+                required
+              >
+                <Select 
+                  onValueChange={(value) => setValue("industry", value)}
+                  {...register("industry", { required: "Industry is required" })}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select industry" />
                   </SelectTrigger>
@@ -122,16 +132,15 @@ export const WebsiteAnalysisCreate = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.industry && (
-                  <p className="text-sm text-red-500">
-                    {errors.industry.message as string}
-                  </p>
-                )}
-              </div>
-            </div>
+              </FormField>
+            </GridBox>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
+            <FormField 
+              label="Description" 
+              htmlFor="description" 
+              error={errors.description?.message as string}
+              required
+            >
               <Textarea
                 id="description"
                 placeholder="Describe the website's purpose, target audience, and main features..."
@@ -144,26 +153,25 @@ export const WebsiteAnalysisCreate = () => {
                   },
                 })}
               />
-              {errors.description && (
-                <p className="text-sm text-red-500">
-                  {errors.description.message as string}
-                </p>
-              )}
-            </div>
+            </FormField>
 
-            <div className="space-y-2">
-              <Label>Keywords *</Label>
-              <div className="flex gap-2">
+            <FormField 
+              label="Keywords" 
+              error={keywords.length === 0 ? "At least one keyword is required" : undefined}
+              required
+            >
+              <FlexBox variant="start">
                 <Input
                   placeholder="Add a keyword..."
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
                   onKeyPress={handleKeywordKeyPress}
+                  className="flex-1"
                 />
                 <Button type="button" onClick={addKeyword} variant="outline">
                   <Plus className="w-4 h-4" />
                 </Button>
-              </div>
+              </FlexBox>
 
               {keywords.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
@@ -185,15 +193,9 @@ export const WebsiteAnalysisCreate = () => {
                   ))}
                 </div>
               )}
+            </FormField>
 
-              {keywords.length === 0 && (
-                <p className="text-sm text-red-500">
-                  At least one keyword is required
-                </p>
-              )}
-            </div>
-
-            <div className="flex justify-end space-x-4 pt-6 border-t">
+            <FormActions>
               <Button
                 type="button"
                 variant="outline"
@@ -207,8 +209,8 @@ export const WebsiteAnalysisCreate = () => {
               >
                 {isSubmitting ? "Creating..." : "Create Analysis"}
               </Button>
-            </div>
-          </form>
+            </FormActions>
+          </Form>
         </CardContent>
       </Card>
     </>
