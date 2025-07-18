@@ -1,6 +1,6 @@
 import { useShow, useNavigation, useDelete, useList } from "@refinedev/core";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import {
   ArrowLeft,
   Edit,
@@ -13,6 +13,8 @@ import {
   Target,
   DollarSign,
   Eye,
+  Plus,
+  Sparkles,
 } from "lucide-react";
 import { FlexBox, GridBox } from "@/components/shared";
 import { Lead } from "@/components/reader";
@@ -22,6 +24,7 @@ import { useLoading } from "@/utility";
 export const WebsiteAnalysisShow = () => {
   const { queryResult } = useShow();
   const { list, edit, show } = useNavigation();
+  const navigate = useNavigate();
   const { mutate: deleteAnalysis } = useDelete();
 
   const { data, isLoading, isError } = queryResult;
@@ -32,7 +35,7 @@ export const WebsiteAnalysisShow = () => {
     resource: "marketing_strategies",
     filters: [
       {
-        field: "website_analysis_id", // Assuming this is the relation field
+        field: "website_analysis_id",
         operator: "eq",
         value: record?.id,
       },
@@ -40,7 +43,14 @@ export const WebsiteAnalysisShow = () => {
     pagination: {
       mode: "off",
     },
+    sorters: [
+      {
+        field: "created_at",
+        order: "desc",
+      },
+    ],
   });
+
   const init = useLoading({ isLoading, isError });
   if (init) return init;
 
@@ -96,7 +106,7 @@ export const WebsiteAnalysisShow = () => {
           title={`Website Analyses`}
           description={` ID: #${String(record.id).slice(0, 8)}`}
         />
-        <FlexBox>
+        <FlexBox className="gap-2">
           <Button
             variant="outline"
             onClick={() => {
@@ -180,10 +190,20 @@ export const WebsiteAnalysisShow = () => {
           {/* Related Marketing Strategies */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="w-5 h-5" />
-                Related Marketing Strategies ({relatedStrategies.length})
-              </CardTitle>
+              <FlexBox>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="w-5 h-5" />
+                  Related Marketing Strategies ({relatedStrategies.length})
+                </CardTitle>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => navigate(`/website-analyses/${record.id}/strategy/step1`)}
+                >
+                  <Plus className="w-3 h-3 mr-1" />
+                  Dodaj nową
+                </Button>
+              </FlexBox>
             </CardHeader>
             <CardContent>
               {strategiesLoading ? (
@@ -193,7 +213,7 @@ export const WebsiteAnalysisShow = () => {
                 </div>
               ) : relatedStrategies.length > 0 ? (
                 <div className="space-y-4">
-                  {relatedStrategies.map((strategy: any) => (
+                  {relatedStrategies.map((strategy: any, index: number) => (
                     <div
                       key={strategy.id}
                       className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
@@ -201,6 +221,9 @@ export const WebsiteAnalysisShow = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs text-muted-foreground">
+                              #{index + 1}
+                            </span>
                             <h4 className="font-medium text-sm">
                               {strategy.title}
                             </h4>
@@ -221,8 +244,8 @@ export const WebsiteAnalysisShow = () => {
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             {strategy.budget_recommendation && (
                               <span className="flex items-center gap-1">
-                                <DollarSign className="w-3 h-3" />$
-                                {strategy.budget_recommendation.toLocaleString()}
+                                <DollarSign className="w-3 h-3" />
+                                {strategy.budget_recommendation.toLocaleString()} PLN
                               </span>
                             )}
                             <span>
@@ -259,9 +282,18 @@ export const WebsiteAnalysisShow = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-muted-foreground text-sm">
-                  No marketing strategies found for this website analysis.
-                </p>
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground text-sm mb-4">
+                    Brak strategii marketingowych dla tej analizy.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate(`/website-analyses/${record.id}/strategy/step1`)}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Wygeneruj pierwszą strategię
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -348,7 +380,14 @@ export const WebsiteAnalysisShow = () => {
             <CardHeader>
               <CardTitle className="text-lg">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
+              <Button
+                className="w-full"
+                onClick={() => navigate(`/website-analyses/${record.id}/strategy/step1`)}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generuj nową strategię
+              </Button>
               <Button
                 className="w-full"
                 variant="outline"

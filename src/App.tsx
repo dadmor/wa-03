@@ -23,11 +23,12 @@ import {
 } from "./pages/google-ads-campaigns";
 import { profileResource, profileRoutes } from "./pages/profiles";
 import { authRoutes } from "./pages/auth";
+import { strategyWizardRoutes } from "./pages/strategy-wizard";
 
 
 
 import LandingPage from "./pages/Landing";
-import { webCampaignResource, webCampaignRoutes } from "./pages/web-campaign-steps";
+import { webCampaignResource, webCampaignRoutes } from "./pages/web-campaign-wizard";
 
 function App() {
   return (
@@ -87,6 +88,7 @@ function App() {
             {...marketingStrategyRoutes}
             {...googleAdsCampaignRoutes}
             {...profileRoutes}
+            {...strategyWizardRoutes}
            
             <Route path="*" element={<ErrorComponent />} />
           </Route>
