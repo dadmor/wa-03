@@ -1,14 +1,18 @@
-// pages/campaign/CampaignStep3.tsx - FIXED VERSION
+// pages/campaign/CampaignStep3.tsx - UPDATED WITH CONSTANTS
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   useFormSchemaStore,
   useLLMOperation,
-  type LLMOperation,
 } from "@/utility/formSchemaStore";
 import StepsHero from "./StepsHero";
 import StepsHeader from "./StepsHeader";
+import {
+  CAMPAIGN_GENERATION_OPERATION,
+  CAMPAIGN_UI_TEXTS,
+  CAMPAIGN_PATHS,
+} from "./campaignWizard.constants";
 
 export const CampaignStep3: React.FC = () => {
   const navigate = useNavigate();
@@ -21,72 +25,16 @@ export const CampaignStep3: React.FC = () => {
     "generate-campaign"
   );
 
+  const { steps, errors } = CAMPAIGN_UI_TEXTS;
+
   useEffect(() => {
-    // Rejestracja operacji LLM dla generowania kampanii
-    const campaignGenerationOperation: LLMOperation = {
-      id: "generate-campaign",
-      name: "Generowanie kampanii marketingowej",
-      config: {
-        endpoint: "https://diesel-power-backend.onrender.com/api/chat",
-      },
-      prompt: {
-        system:
-          "Jesteś ekspertem od marketingu cyfrowego. Tworzysz strategie marketingowe.",
-        user: `
-Na podstawie analizy strony wygeneruj strategię marketingową:
+    // Rejestracja operacji LLM z pliku stałych
+    llmCampaignGeneration.registerOperation(CAMPAIGN_GENERATION_OPERATION);
 
-URL: {{url}}
-Opis: {{description}}
-Słowa kluczowe: {{keywords}}
-Branża: {{industry}}
-
-Wygeneruj JSON:
-{
-  "title": "<kreatywny tytuł kampanii>",
-  "targetAudience": "<szczegółowy opis grupy docelowej - demografia, zainteresowania, zachowania>",
-  "budgetRecommendation": <liczba - budżet miesięczny PLN>,
-  "notes": "<szczegółowe notatki strategiczne: kanały, timing, content marketing, SEO/SEM, social media, KPI, testy A/B, konkurencja, USP - min 300 słów>"
-}
-
-Wymagania:
-- Tytuł: angażujący i strategiczny
-- Grupa docelowa: bardzo konkretna (wiek, płeć, wykształcenie, zainteresowania)
-- Budżet: realistyczny dla branży (1000-50000 PLN)
-- Notatki: bardzo szczegółowe z konkretnymi działaniami
-        `,
-        responseFormat: "json",
-      },
-      inputMapping: (data) => ({
-        url: data.url,
-        description: data.description,
-        keywords: Array.isArray(data.keywords)
-          ? data.keywords.join(", ")
-          : data.keywords,
-        industry: data.industry,
-      }),
-      outputMapping: (llmResult, currentData) => ({
-        ...currentData,
-        title: llmResult.title,
-        targetAudience: llmResult.targetAudience,
-        budgetRecommendation: llmResult.budgetRecommendation,
-        notes: llmResult.notes,
-      }),
-      validation: (result) =>
-        !!(
-          result.title &&
-          result.targetAudience &&
-          result.budgetRecommendation &&
-          result.notes
-        ),
-    };
-
-    llmCampaignGeneration.registerOperation(campaignGenerationOperation);
-
-    // FIXED: Properly return cleanup function with empty dependency array
     return () => {
       llmCampaignGeneration.unregisterOperation();
     };
-  }, []); // FIXED: Added empty dependency array
+  }, []);
 
   const handleNext = async () => {
     if (!industry.trim()) return;
@@ -101,9 +49,9 @@ Wymagania:
         industry: industry.trim(),
       });
 
-      navigate("/campaign/step4");
+      navigate(CAMPAIGN_PATHS.step4);
     } catch (error) {
-      console.error("Błąd generowania kampanii:", error);
+      console.error(errors.generationError, error);
     }
   };
 
@@ -112,8 +60,8 @@ Wymagania:
       <StepsHero step={3} />
       <div className="space-y-6 p-8">
         <StepsHeader
-          title={<>Krok 3: Potwierdź lub zmień branżę</>}
-          description="Możesz dostosować wykrytą branżę, aby lepiej dopasować strategię"
+          title={<>{steps[3].title}</>}
+          description={steps[3].description}
         />
 
         <div className="space-y-6">
@@ -137,7 +85,7 @@ Wymagania:
           <div className="flex justify-between">
             <Button
               variant="outline"
-              onClick={() => navigate("/campaign/step2")}
+              onClick={() => navigate(CAMPAIGN_PATHS.step2)}
             >
               Wstecz
             </Button>
@@ -149,10 +97,10 @@ Wymagania:
               {llmCampaignGeneration.loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Generuję kampanię...
+                  {steps[3].loading}
                 </>
               ) : (
-                "Generuj kampanię"
+                steps[3].button
               )}
             </Button>
           </div>
@@ -161,7 +109,7 @@ Wymagania:
         {llmCampaignGeneration.loading && (
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <span className="text-blue-800 text-sm">
-              ⚡ Generuję strategię marketingową na podstawie analizy strony...
+              {steps[3].loadingInfo}
             </span>
           </div>
         )}
