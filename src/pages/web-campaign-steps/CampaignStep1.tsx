@@ -1,15 +1,20 @@
 // pages/campaign/CampaignStep1.tsx - FIXED VERSION
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lead } from "@/components/reader";
-import { useFormSchemaStore, useLLMOperation, type LLMOperation } from "@/utility/formSchemaStore";
+import {
+  useFormSchemaStore,
+  useLLMOperation,
+  type LLMOperation,
+} from "@/utility/formSchemaStore";
+import StepsHero from "./StepsHero";
+import StepsHeader from "./StepsHeader";
 
 export const CampaignStep1: React.FC = () => {
   const navigate = useNavigate();
   const { register, setData } = useFormSchemaStore();
   const [url, setUrl] = useState("");
   const [urlError, setUrlError] = useState("");
-  
+
   const llmAnalysis = useLLMOperation("campaign-wizard", "analyze-website");
 
   useEffect(() => {
@@ -25,10 +30,10 @@ export const CampaignStep1: React.FC = () => {
             url: {
               type: "url",
               title: "Adres strony internetowej",
-              placeholder: "https://twojafirma.pl"
-            }
+              placeholder: "https://twojafirma.pl",
+            },
           },
-          required: ["url"]
+          required: ["url"],
         },
         step2: {
           title: "Przegląd analizy",
@@ -36,8 +41,8 @@ export const CampaignStep1: React.FC = () => {
           properties: {
             description: { type: "textarea", title: "Opis", readOnly: true },
             keywords: { type: "tags", title: "Słowa kluczowe", readOnly: true },
-            industry: { type: "text", title: "Branża", readOnly: true }
-          }
+            industry: { type: "text", title: "Branża", readOnly: true },
+          },
         },
         step3: {
           title: "Dostosowanie branży",
@@ -46,20 +51,32 @@ export const CampaignStep1: React.FC = () => {
             industry: {
               type: "text",
               title: "Branża (edytowalna)",
-              placeholder: "Dostosuj branżę..."
-            }
+              placeholder: "Dostosuj branżę...",
+            },
           },
-          required: ["industry"]
+          required: ["industry"],
         },
         step4: {
           title: "Podgląd kampanii",
           type: "object",
           properties: {
             title: { type: "text", title: "Tytuł kampanii", readOnly: true },
-            targetAudience: { type: "textarea", title: "Grupa docelowa", readOnly: true },
-            budgetRecommendation: { type: "number", title: "Budżet (PLN)", readOnly: true },
-            notes: { type: "textarea", title: "Notatki strategiczne", readOnly: true }
-          }
+            targetAudience: {
+              type: "textarea",
+              title: "Grupa docelowa",
+              readOnly: true,
+            },
+            budgetRecommendation: {
+              type: "number",
+              title: "Budżet (PLN)",
+              readOnly: true,
+            },
+            notes: {
+              type: "textarea",
+              title: "Notatki strategiczne",
+              readOnly: true,
+            },
+          },
         },
         step5: {
           title: "Finalizacja",
@@ -68,27 +85,32 @@ export const CampaignStep1: React.FC = () => {
             title: {
               type: "text",
               title: "Tytuł kampanii",
-              placeholder: "Edytuj tytuł..."
+              placeholder: "Edytuj tytuł...",
             },
             targetAudience: {
               type: "textarea",
               title: "Grupa docelowa",
-              placeholder: "Opisz grupę docelową..."
+              placeholder: "Opisz grupę docelową...",
             },
             budgetRecommendation: {
               type: "number",
               title: "Budżet (PLN)",
-              placeholder: "Wprowadź budżet..."
+              placeholder: "Wprowadź budżet...",
             },
             notes: {
               type: "textarea",
               title: "Notatki strategiczne",
-              placeholder: "Dodaj notatki..."
-            }
+              placeholder: "Dodaj notatki...",
+            },
           },
-          required: ["title", "targetAudience", "budgetRecommendation", "notes"]
-        }
-      }
+          required: [
+            "title",
+            "targetAudience",
+            "budgetRecommendation",
+            "notes",
+          ],
+        },
+      },
     });
 
     // Rejestracja operacji LLM dla analizy strony
@@ -96,10 +118,11 @@ export const CampaignStep1: React.FC = () => {
       id: "analyze-website",
       name: "Analiza strony internetowej",
       config: {
-        endpoint: "https://diesel-power-backend.onrender.com/api/chat"
+        endpoint: "https://diesel-power-backend.onrender.com/api/chat",
       },
       prompt: {
-        system: "Jesteś ekspertem od analizy stron internetowych i marketingu cyfrowego.",
+        system:
+          "Jesteś ekspertem od analizy stron internetowych i marketingu cyfrowego.",
         user: `
 Przeanalizuj stronę internetową: {{url}}
 
@@ -115,7 +138,7 @@ Wymagania:
 - Keywords: 5-10 słów kluczowych związanych z branżą
 - Industry: konkretna branża (np. "e-commerce mody", "usługi finansowe")
         `,
-        responseFormat: 'json'
+        responseFormat: "json",
       },
       inputMapping: (data) => ({ url: data.url }),
       outputMapping: (llmResult, currentData) => ({
@@ -123,9 +146,10 @@ Wymagania:
         description: llmResult.description,
         keywords: llmResult.keywords,
         industry: llmResult.industry,
-        originalIndustry: llmResult.industry
+        originalIndustry: llmResult.industry,
       }),
-      validation: (result) => !!(result.description && result.keywords && result.industry)
+      validation: (result) =>
+        !!(result.description && result.keywords && result.industry),
     };
 
     llmAnalysis.registerOperation(websiteAnalysisOperation);
@@ -139,7 +163,7 @@ Wymagania:
 
   const handleAnalyze = async () => {
     setUrlError("");
-    
+
     if (!url.trim()) {
       setUrlError("Podaj adres URL strony");
       return;
@@ -155,49 +179,54 @@ Wymagania:
   };
 
   return (
-    <>
-      <Lead
-        title="Kreator kampanii"
-        description="1 z 5 - Analiza strony internetowej"
-      />
+    <div className="border rounded-lg bg-white shadow relative pb-6">
+      <StepsHero step={1} />
 
-      {urlError && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <span className="text-red-800 text-sm">{urlError}</span>
-        </div>
-      )}
-
-      {llmAnalysis.error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <span className="text-red-800 text-sm">Błąd: {llmAnalysis.error}</span>
-        </div>
-      )}
-
-      <div className="space-y-4">
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://twojafirma.pl"
-          disabled={llmAnalysis.loading}
-          className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+      <div className="p-6">
+        <StepsHeader
+          title={<>Podaj adres strony www do analizy</>}
+          description="Nasza AI przeanalizuje Twoją stronę i zaproponuje najlepszą strategię marketingową"
         />
-        
-        <button
-          onClick={handleAnalyze}
-          disabled={llmAnalysis.loading || !url.trim()}
-          className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium rounded-lg flex items-center justify-center gap-2"
-        >
-          {llmAnalysis.loading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              Analizuję stronę...
-            </>
-          ) : (
-            "Analizuj stronę"
-          )}
-        </button>
+        {urlError && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <span className="text-red-800 text-sm">{urlError}</span>
+          </div>
+        )}
+
+        {llmAnalysis.error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <span className="text-red-800 text-sm">
+              Błąd: {llmAnalysis.error}
+            </span>
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://twojafirma.pl"
+            disabled={llmAnalysis.loading}
+            className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+
+          <button
+            onClick={handleAnalyze}
+            disabled={llmAnalysis.loading || !url.trim()}
+            className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium rounded-lg flex items-center justify-center gap-2"
+          >
+            {llmAnalysis.loading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Analizuję stronę...
+              </>
+            ) : (
+              "Analizuj stronę"
+            )}
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };

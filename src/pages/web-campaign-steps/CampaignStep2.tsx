@@ -1,9 +1,10 @@
 // pages/campaign/CampaignStep2.tsx - Przegląd analizy
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Lead } from "@/components/reader";
 import { Button } from "@/components/ui/button";
 import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import StepsHero from "./StepsHero";
+import StepsHeader from "./StepsHeader";
 
 export const CampaignStep2: React.FC = () => {
   const navigate = useNavigate();
@@ -11,10 +12,12 @@ export const CampaignStep2: React.FC = () => {
   const formData = getData("campaign-wizard");
 
   return (
-    <>
-      <Lead
-        title="Kreator kampanii"
-        description="2 z 5 - Przegląd danych ze strony"
+    <div className="border rounded-lg bg-white shadow relative pb-6">
+    <StepsHero step={2} />
+    <div className="space-y-6 p-8">
+      <StepsHeader
+        title={<>Przegląd danych ze strony</>}
+        description="Przeanalizowaliśmy Twoją stronę. Sprawdź wyniki analizy."
       />
 
       <div className="space-y-6">
@@ -59,6 +62,6 @@ export const CampaignStep2: React.FC = () => {
           </Button>
         </div>
       </div>
-    </>
+    </div></div>
   );
 };
