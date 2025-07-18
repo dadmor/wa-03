@@ -70,7 +70,11 @@ const LandingPage = () => {
             <Button variant="ghost" className="text-sm font-medium">
               Cennik
             </Button>
-            <Button variant="default" size="sm"  onClick={() => navigate('/login')}>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => navigate("/login")}
+            >
               Rozpocznij <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -385,10 +389,16 @@ const LandingPage = () => {
                 Dołącz do 1000+ firm, które zautomatyzowały swój marketing
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <Button size="lg" className="px-8 py-6 text-lg">
+                <Button
+                  size="lg"
+                  className="px-8 py-6 text-lg"
+                  onClick={() => navigate("/campaign")}
+                >
                   Wypróbuj za darmo
                 </Button>
+
                 <Button
+                  onClick={() => navigate("/campaign")}
                   size="lg"
                   variant="outline"
                   className="px-8 py-6 text-lg"
