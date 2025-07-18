@@ -14,8 +14,10 @@ import {
   Layers,
   Clock,
   CheckCircle2,
+  BarChart,
 } from "lucide-react";
 import { useNavigate } from "react-router";
+import { Bar, BarChart as RechartsBarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -51,6 +53,51 @@ const LandingPage = () => {
       color: "from-green-500/20 to-green-600/10",
     },
   ];
+
+  const chartData = [
+    { day: 'Pon', value: 40, conversions: 245 },
+    { day: 'Wto', value: 65, conversions: 398 },
+    { day: 'Śro', value: 55, conversions: 332 },
+    { day: 'Czw', value: 75, conversions: 456 },
+    { day: 'Pią', value: 85, conversions: 512 },
+    { day: 'Sob', value: 95, conversions: 578 },
+    { day: 'Nie', value: 88, conversions: 526 }
+  ];
+
+  // Typ dla danych wykresu
+  interface ChartDataPoint {
+    day: string;
+    value: number;
+    conversions: number;
+  }
+
+  // Interfejs dla CustomTooltip
+  interface CustomTooltipProps {
+    active?: boolean;
+    payload?: Array<{
+      value: number;
+      payload: ChartDataPoint;
+    }>;
+    label?: string;
+  }
+
+  // Poprawiona funkcja CustomTooltip
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-background border rounded-lg shadow-lg p-3">
+          <p className="font-medium">{label}</p>
+          <p className="text-sm text-primary">
+            Konwersje: {payload[0].payload.conversions}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Skuteczność: {payload[0].value}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -195,24 +242,35 @@ const LandingPage = () => {
                       </div>
                     </div>
 
-                    {/* Chart Preview */}
+                    {/* Chart - Recharts */}
                     <div className="bg-muted/50 rounded-lg p-4">
-                      <div className="flex items-end justify-between h-32 gap-2">
-                        {[40, 65, 55, 75, 85, 95, 88].map((height, i) => (
-                          <div key={i} className="flex-1">
-                            <div
-                              className="bg-primary/20 hover:bg-primary/30 transition-colors rounded-t"
-                              style={{ height: `${height}%` }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                        <span>Pon</span>
-                        <span>Śro</span>
-                        <span>Pią</span>
-                        <span>Nie</span>
-                      </div>
+                      <h4 className="text-sm font-medium mb-4 text-muted-foreground">
+                        Skuteczność kampanii (%)
+                      </h4>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <RechartsBarChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                          <XAxis 
+                            dataKey="day" 
+                            tick={{ fontSize: 12 }}
+                            tickLine={false}
+                          />
+                          <YAxis 
+                            tick={{ fontSize: 12 }}
+                            tickLine={false}
+                            axisLine={false}
+                          />
+                          <Tooltip 
+                            content={<CustomTooltip />} 
+                            cursor={{ fill: 'transparent' }}
+                          />
+                          <Bar 
+                            dataKey="value" 
+                            fill="hsl(var(--primary))"
+                            radius={[8, 8, 0, 0]}
+                          />
+                        </RechartsBarChart>
+                      </ResponsiveContainer>
                     </div>
 
                     {/* Active Campaigns */}
