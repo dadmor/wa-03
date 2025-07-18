@@ -1,6 +1,6 @@
 // src/pages/website-analyses/strategy-wizard/strategyWizard.constants.ts
 
-import { LLMOperation } from "@/utility/formSchemaStore";
+import { LLMOperation } from "@/utility/llmFormWizard";
 
 // ===== FORM SCHEMA =====
 export const STRATEGY_WIZARD_SCHEMA = {
@@ -29,8 +29,16 @@ export const STRATEGY_WIZARD_SCHEMA = {
       type: "object",
       properties: {
         title: { type: "text", title: "Tytuł", readOnly: true },
-        targetAudience: { type: "textarea", title: "Grupa docelowa", readOnly: true },
-        budgetRecommendation: { type: "number", title: "Budżet", readOnly: true },
+        targetAudience: {
+          type: "textarea",
+          title: "Grupa docelowa",
+          readOnly: true,
+        },
+        budgetRecommendation: {
+          type: "number",
+          title: "Budżet",
+          readOnly: true,
+        },
         notes: { type: "textarea", title: "Notatki", readOnly: true },
       },
     },
@@ -72,7 +80,8 @@ export const STRATEGY_GENERATION_OPERATION: LLMOperation = {
     endpoint: "https://diesel-power-backend.onrender.com/api/chat",
   },
   prompt: {
-    system: "Jesteś ekspertem od marketingu cyfrowego. Tworzysz strategie marketingowe.",
+    system:
+      "Jesteś ekspertem od marketingu cyfrowego. Tworzysz strategie marketingowe.",
     user: `
 Na podstawie analizy strony wygeneruj strategię marketingową:
 
@@ -100,7 +109,9 @@ Wymagania:
   inputMapping: (data) => ({
     url: data.url,
     description: data.description,
-    keywords: Array.isArray(data.keywords) ? data.keywords.join(", ") : data.keywords,
+    keywords: Array.isArray(data.keywords)
+      ? data.keywords.join(", ")
+      : data.keywords,
     industry: data.industry,
   }),
   outputMapping: (llmResult, currentData) => ({
@@ -111,7 +122,12 @@ Wymagania:
     notes: llmResult.notes,
   }),
   validation: (result) =>
-    !!(result.title && result.targetAudience && result.budgetRecommendation && result.notes),
+    !!(
+      result.title &&
+      result.targetAudience &&
+      result.budgetRecommendation &&
+      result.notes
+    ),
 };
 
 // ===== VALIDATION RULES =====
@@ -151,7 +167,8 @@ export const STRATEGY_UI_TEXTS = {
     },
     2: {
       title: "Generowanie strategii",
-      description: "AI analizuje Twoją stronę i przygotowuje strategię marketingową",
+      description:
+        "AI analizuje Twoją stronę i przygotowuje strategię marketingową",
       loading: "Generuję strategię marketingową...",
     },
     3: {

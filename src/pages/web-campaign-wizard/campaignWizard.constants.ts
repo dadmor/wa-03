@@ -1,6 +1,6 @@
 // src/pages/web-campaign-steps/campaignWizard.constants.ts
 
-import { LLMOperation } from "@/utility/formSchemaStore";
+import { LLMOperation } from "@/utility/llmFormWizard";
 
 // ===== FORM SCHEMA =====
 export const CAMPAIGN_WIZARD_SCHEMA = {

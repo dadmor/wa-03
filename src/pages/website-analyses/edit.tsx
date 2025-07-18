@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { Button, Input, Textarea } from "@/components/ui";
 import { FlexBox, GridBox } from "@/components/shared";
 import { Lead } from "@/components/reader";
-import { Form, FormActions, FormField } from "@/components/form";
+import { Form, FormActions, FormControl } from "@/components/form";
 import { useLoading } from "@/utility";
 
 const industries = [
@@ -127,7 +127,7 @@ export const WebsiteAnalysisEdit = () => {
         <CardContent>
           <Form onSubmit={handleSubmit(onFinish)}>
             <GridBox variant="1-2-2">
-              <FormField
+              <FormControl
                 label="Website URL"
                 htmlFor="url"
                 error={errors.url?.message as string}
@@ -145,9 +145,9 @@ export const WebsiteAnalysisEdit = () => {
                     },
                   })}
                 />
-              </FormField>
+              </FormControl>
 
-              <FormField
+              <FormControl
                 label="Industry"
                 error={errors.industry?.message as string}
                 required
@@ -167,10 +167,10 @@ export const WebsiteAnalysisEdit = () => {
                     ))}
                   </SelectContent>
                 </Select>
-              </FormField>
+              </FormControl>
             </GridBox>
 
-            <FormField
+            <FormControl
               label="Description"
               htmlFor="description"
               error={errors.description?.message as string}
@@ -188,9 +188,9 @@ export const WebsiteAnalysisEdit = () => {
                   },
                 })}
               />
-            </FormField>
+            </FormControl>
 
-            <FormField
+            <FormControl
               label="Keywords"
               error={
                 keywords.length === 0
@@ -232,7 +232,7 @@ export const WebsiteAnalysisEdit = () => {
                   ))}
                 </div>
               )}
-            </FormField>
+            </FormControl>
 
             {record.created_at && (
               <FlexBox variant="end" className="text-xs text-muted-foreground">

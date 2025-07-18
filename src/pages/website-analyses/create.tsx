@@ -8,16 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { X, Plus, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { Button, Input, Textarea } from "@/components/ui";
-import { 
-  FlexBox, 
-  GridBox, 
-} from "@/components/shared";
+import { FlexBox, GridBox } from "@/components/shared";
 import { Lead } from "@/components/reader";
-import { Form, FormActions, FormField } from "@/components/form";
+import { Form, FormActions, FormControl, KeywordsField } from "@/components/form";
 
 const industries = [
   "Technology",
@@ -34,38 +29,17 @@ const industries = [
 
 export const WebsiteAnalysisCreate = () => {
   const { list } = useNavigation();
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const [keywordInput, setKeywordInput] = useState("");
 
   const {
     refineCore: { onFinish },
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const addKeyword = () => {
-    if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
-      const newKeywords = [...keywords, keywordInput.trim()];
-      setKeywords(newKeywords);
-      setValue("keywords", newKeywords);
-      setKeywordInput("");
-    }
-  };
-
-  const removeKeyword = (keywordToRemove: string) => {
-    const newKeywords = keywords.filter((k) => k !== keywordToRemove);
-    setKeywords(newKeywords);
-    setValue("keywords", newKeywords);
-  };
-
-  const handleKeywordKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addKeyword();
-    }
-  };
+  const keywords = watch("keywords") || [];
 
   return (
     <>
@@ -92,9 +66,9 @@ export const WebsiteAnalysisCreate = () => {
         <CardContent>
           <Form onSubmit={handleSubmit(onFinish)}>
             <GridBox variant="1-2-2">
-              <FormField 
-                label="Website URL" 
-                htmlFor="url" 
+              <FormControl
+                label="Website URL"
+                htmlFor="url"
                 error={errors.url?.message as string}
                 required
               >
@@ -110,16 +84,18 @@ export const WebsiteAnalysisCreate = () => {
                     },
                   })}
                 />
-              </FormField>
+              </FormControl>
 
-              <FormField 
-                label="Industry" 
+              <FormControl
+                label="Industry"
                 error={errors.industry?.message as string}
                 required
               >
-                <Select 
+                <Select
                   onValueChange={(value) => setValue("industry", value)}
-                  {...register("industry", { required: "Industry is required" })}
+                  {...register("industry", {
+                    required: "Industry is required",
+                  })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select industry" />
@@ -132,12 +108,12 @@ export const WebsiteAnalysisCreate = () => {
                     ))}
                   </SelectContent>
                 </Select>
-              </FormField>
+              </FormControl>
             </GridBox>
 
-            <FormField 
-              label="Description" 
-              htmlFor="description" 
+            <FormControl
+              label="Description"
+              htmlFor="description"
               error={errors.description?.message as string}
               required
             >
@@ -153,47 +129,15 @@ export const WebsiteAnalysisCreate = () => {
                   },
                 })}
               />
-            </FormField>
+            </FormControl>
 
-            <FormField 
-              label="Keywords" 
-              error={keywords.length === 0 ? "At least one keyword is required" : undefined}
+            <KeywordsField
+              value={keywords}
+              onChange={(newKeywords) => setValue("keywords", newKeywords)}
               required
-            >
-              <FlexBox variant="start">
-                <Input
-                  placeholder="Add a keyword..."
-                  value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
-                  onKeyPress={handleKeywordKeyPress}
-                  className="flex-1"
-                />
-                <Button type="button" onClick={addKeyword} variant="outline">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </FlexBox>
-
-              {keywords.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {keywords.map((keyword, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="flex items-center gap-1"
-                    >
-                      {keyword}
-                      <button
-                        type="button"
-                        onClick={() => removeKeyword(keyword)}
-                        className="ml-1 hover:bg-red-100 rounded-full p-0.5"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </FormField>
+              minKeywords={1}
+              maxKeywords={10}
+            />
 
             <FormActions>
               <Button
