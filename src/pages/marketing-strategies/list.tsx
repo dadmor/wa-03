@@ -1,4 +1,5 @@
-import { useTable, useNavigation, useDelete } from "@refinedev/core";
+import { useList, useNavigation, useDelete } from "@refinedev/core";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -8,25 +9,85 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Eye, Edit, Trash2, Plus, DollarSign } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Eye, Edit, Trash2, Plus, DollarSign, Globe, X } from "lucide-react";
 import { FlexBox, GridBox } from "@/components/shared";
 import { PaginationSwith } from "@/components/navigation";
 import { Lead } from "@/components/reader";
-import { useLoading } from "@/utility";
 
 export const MarketingStrategyList = () => {
-  const {
-    tableQuery: { data, isLoading, isError },
-    current,
-    setCurrent,
-    pageSize,
-    setFilters,
-  } = useTable();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUrl, setSelectedUrl] = useState("all");
+  const [current, setCurrent] = useState(1);
+  const pageSize = 10;
+
+  // Pobierz listę wszystkich analiz (z ID i URL) dla filtra
+  const { data: urlsData } = useList({
+    resource: "website_analyses",
+    meta: {
+      select: "id, url, created_at",
+    },
+    pagination: { pageSize: 1000 }, // Pobierz wszystkie analizy
+    sorters: [
+      {
+        field: "url",
+        order: "asc",
+      },
+      {
+        field: "created_at",
+        order: "desc",
+      },
+    ],
+  });
+
+  // Reset paginacji gdy zmieniają się filtry
+  useEffect(() => {
+    setCurrent(1);
+  }, [searchTerm, selectedUrl]);
+
+  // Budowanie filtrów
+  const filters: any[] = [];
+  if (searchTerm) {
+    filters.push({
+      field: "title",
+      operator: "contains" as const,
+      value: searchTerm,
+    });
+  }
+  if (selectedUrl && selectedUrl !== "all") {
+    filters.push({
+      field: "website_analysis_id",
+      operator: "eq" as const,
+      value: selectedUrl,
+    });
+  }
+
+  const { data, isLoading, isError } = useList({
+    resource: "marketing_strategies",
+    pagination: {
+      current,
+      pageSize,
+    },
+    filters: filters,
+    meta: {
+      select: "*, website_analysis:website_analyses(url)",
+    },
+  });
+
   const { create, edit, show } = useNavigation();
   const { mutate: deleteStrategy } = useDelete();
 
-  const init = useLoading({ isLoading, isError });
-  if (init) return init;
+  if (isLoading) return <div className="p-6">Ładowanie...</div>;
+  if (isError)
+    return (
+      <div className="p-6 text-red-500">Błąd podczas ładowania strategii</div>
+    );
 
   return (
     <>
@@ -42,23 +103,99 @@ export const MarketingStrategyList = () => {
         </Button>
       </FlexBox>
 
-      <FlexBox>
-        <Input
-          placeholder="Szukaj strategii..."
-          className="max-w-sm"
-          onChange={(e) => {
-            setFilters([
-              {
-                field: "title",
-                operator: "contains",
-                value: e.target.value,
-              },
-            ]);
-          }}
-        />
+      <FlexBox variant="start" className="flex-col sm:flex-row sm:items-center">
+        <FlexBox variant="start" className="flex-1 max-w-sm">
+          <Input
+            placeholder="Szukaj strategii..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </FlexBox>
+
+        <FlexBox variant="start">
+          <Select value={selectedUrl} onValueChange={setSelectedUrl}>
+            <SelectTrigger className="w-64">
+              <SelectValue placeholder="Filtruj według strony..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Wszystkie strony</SelectItem>
+              {urlsData?.data?.map((analysis: any) => (
+                <SelectItem key={analysis.id} value={analysis.id}>
+                  <FlexBox className="w-full">
+                    <FlexBox variant="start">
+                      <Globe className="w-4 h-4" />
+                      {analysis.url}
+                    </FlexBox>
+                    <span className="text-xs text-muted-foreground ml-2">
+                      #{analysis.id.slice(0, 8)}
+                    </span>
+                  </FlexBox>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {selectedUrl && selectedUrl !== "all" && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedUrl("all")}
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          )}
+        </FlexBox>
       </FlexBox>
 
-      <GridBox>
+      {/* Aktywne filtry */}
+      {(searchTerm || (selectedUrl && selectedUrl !== "all")) && (
+        <FlexBox variant="start">
+          <span className="text-sm font-medium">Aktywne filtry:</span>
+          {searchTerm && (
+            <Badge variant="secondary" className="gap-1">
+              Tytuł: "{searchTerm}"
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 ml-1"
+                onClick={() => setSearchTerm("")}
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </Badge>
+          )}
+          {selectedUrl && selectedUrl !== "all" && (
+            <Badge variant="secondary" className="gap-1">
+              Strona:{" "}
+              {
+                urlsData?.data?.find((analysis) => analysis.id === selectedUrl)
+                  ?.url
+              }
+              <span className="text-xs">#{selectedUrl.slice(0, 8)}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0 ml-1"
+                onClick={() => setSelectedUrl("all")}
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </Badge>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSearchTerm("");
+              setSelectedUrl("all");
+            }}
+          >
+            Wyczyść wszystkie
+          </Button>
+        </FlexBox>
+      )}
+
+      <GridBox variant="1-2-2">
         {data?.data?.map((strategy: any) => (
           <Card key={strategy.id}>
             <CardHeader>
@@ -78,6 +215,15 @@ export const MarketingStrategyList = () => {
                 )}...`}
                 variant="card"
               />
+
+              {strategy.website_analysis?.url && (
+                <FlexBox variant="start" className="gap-1 mt-2">
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    {strategy.website_analysis.url}
+                  </span>
+                </FlexBox>
+              )}
             </CardHeader>
 
             <CardContent>
@@ -87,14 +233,21 @@ export const MarketingStrategyList = () => {
                   Rekomendowany Budżet
                 </FlexBox>
                 <Badge variant="outline">
-                  {strategy.budget_recommendation?.toLocaleString('pl-PL')} zł
+                  {strategy.budget_recommendation?.toLocaleString("pl-PL")} zł
                 </Badge>
               </FlexBox>
-              <FlexBox variant="start" className="text-sm text-muted-foreground">
+              <FlexBox
+                variant="start"
+                className="text-sm text-muted-foreground"
+              >
                 {strategy.notes?.substring(0, 80)}...
               </FlexBox>
-              <FlexBox variant="start" className="text-xs text-muted-foreground">
-                Utworzono: {new Date(strategy.created_at).toLocaleDateString('pl-PL')}
+              <FlexBox
+                variant="start"
+                className="text-xs text-muted-foreground"
+              >
+                Utworzono:{" "}
+                {new Date(strategy.created_at).toLocaleDateString("pl-PL")}
               </FlexBox>
             </CardContent>
 
@@ -119,9 +272,7 @@ export const MarketingStrategyList = () => {
                 variant="destructive"
                 size="sm"
                 onClick={() => {
-                  if (
-                    confirm("Czy na pewno chcesz usunąć tę strategię?")
-                  ) {
+                  if (confirm("Czy na pewno chcesz usunąć tę strategię?")) {
                     deleteStrategy({
                       resource: "marketing_strategies",
                       id: strategy.id,
