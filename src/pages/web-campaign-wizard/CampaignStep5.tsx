@@ -1,7 +1,7 @@
 // CampaignStep5.tsx - UPDATED WITH CONSTANTS
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
 import { useCreate } from "@refinedev/core";
 import { Save, ArrowLeft, FileText, Target, Wallet, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";

@@ -2,7 +2,7 @@
 import { NarrowCol } from "@/components/layout/NarrowCol";
 import { Lead } from "@/components/reader";
 import { SchemaForm } from "@/components/SchemaForm";
-import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
 import { UserPlus } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";

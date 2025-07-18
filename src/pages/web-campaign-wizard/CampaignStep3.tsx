@@ -2,10 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  useFormSchemaStore,
-  useLLMOperation,
-} from "@/utility/formSchemaStore";
+import { useFormSchemaStore, useLLMOperation } from "@/utility/llmFormWizard";
 import StepsHero from "./StepsHero";
 import StepsHeader from "./StepsHeader";
 import {
@@ -28,7 +25,6 @@ export const CampaignStep3: React.FC = () => {
   const { steps, errors } = CAMPAIGN_UI_TEXTS;
 
   useEffect(() => {
-    // Rejestracja operacji LLM z pliku stałych
     llmCampaignGeneration.registerOperation(CAMPAIGN_GENERATION_OPERATION);
 
     return () => {

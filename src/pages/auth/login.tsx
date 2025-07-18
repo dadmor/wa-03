@@ -13,8 +13,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, AlertTriangle, Info, Mail, Lock, CheckCircle } from "lucide-react";
 import { NarrowCol } from "@/components/layout/NarrowCol";
-import { Lead } from "@/components/reader";
-import { useLoginForm } from "@/utility/useLoginForm";
+import { useLoginForm } from "@/utility/auth/useLoginForm";
 import { Link, useSearchParams } from "react-router-dom";
 
 export const LoginPage: React.FC = () => {

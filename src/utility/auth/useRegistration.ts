@@ -1,10 +1,10 @@
 // utility/auth/useRegistration.ts
 
-import React from 'react';
-import { useRegister } from '@refinedev/core';
-import { useNavigate } from 'react-router-dom';
-import { useFormSchemaStore } from '@/utility/formSchemaStore';
-import { AuthError } from './authErrors';
+import React from "react";
+import { useRegister } from "@refinedev/core";
+import { useNavigate } from "react-router-dom";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
+import { AuthError } from "./authErrors";
 
 interface RegisterVariables {
   email: string;
@@ -34,18 +34,16 @@ interface RegisterErrorResponse {
   error: AuthError;
 }
 
-type RegisterResponse = RegisterSuccessResponse | RegisterErrorResponse;
-
 export const useRegistration = (): UseRegistrationResult => {
   const navigate = useNavigate();
   const { getData, setData } = useFormSchemaStore();
   const [hasAttempted, setHasAttempted] = React.useState(false);
 
-  const { 
-    mutate: registerMutation, 
-    isLoading, 
+  const {
+    mutate: registerMutation,
+    isLoading,
     error: hookError,
-    data: registerData
+    data: registerData,
   } = useRegister<RegisterVariables>();
 
   const processData = getData("registration");
@@ -53,7 +51,7 @@ export const useRegistration = (): UseRegistrationResult => {
   // Poprawna obsługa błędów z type guards
   const registrationError = React.useMemo(() => {
     if (!hasAttempted) return null;
-    
+
     // Hook error od React Query
     if (hookError) {
       if (hookError instanceof Error) {
@@ -61,12 +59,12 @@ export const useRegistration = (): UseRegistrationResult => {
       }
       return "Wystąpił błąd podczas rejestracji.";
     }
-    
+
     // Błąd z odpowiedzi authProvider - używamy type guard
     if (registerData && isErrorResponse(registerData)) {
       return registerData.error.message;
     }
-    
+
     return null;
   }, [hookError, registerData, hasAttempted]);
 
@@ -86,7 +84,11 @@ export const useRegistration = (): UseRegistrationResult => {
 
   // Przekierowanie po sukcesie
   React.useEffect(() => {
-    if (isRegistrationSuccessful && registerData && isSuccessResponse(registerData)) {
+    if (
+      isRegistrationSuccessful &&
+      registerData &&
+      isSuccessResponse(registerData)
+    ) {
       if (!processData.registrationComplete) {
         setData("registration", {
           ...processData,
@@ -94,14 +96,14 @@ export const useRegistration = (): UseRegistrationResult => {
           registrationDate: new Date().toISOString(),
           user: registerData.user,
           session: registerData.session,
-          successData: registerData
+          successData: registerData,
         });
       }
-      
+
       const timer = setTimeout(() => {
         navigate("/register/step4");
       }, 1500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isRegistrationSuccessful, registerData, navigate, processData, setData]);
@@ -109,7 +111,7 @@ export const useRegistration = (): UseRegistrationResult => {
   // Funkcja rejestracji
   const register = React.useCallback(() => {
     setHasAttempted(true);
-    
+
     const registerVariables: RegisterVariables = {
       email: processData.email,
       password: processData.password,
@@ -120,7 +122,7 @@ export const useRegistration = (): UseRegistrationResult => {
     if (processData.operator_id) {
       registerVariables.operator_id = processData.operator_id;
     }
-    
+
     registerMutation(registerVariables);
   }, [processData, registerMutation]);
 
@@ -135,6 +137,6 @@ export const useRegistration = (): UseRegistrationResult => {
     error: registrationError,
     register,
     goBack,
-    processData
+    processData,
   };
 };

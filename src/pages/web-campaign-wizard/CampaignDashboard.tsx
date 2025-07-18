@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Lead } from "@/components/reader";
 import { Button } from "@/components/ui/button";
-import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
 import { FlexBox, GridBox } from "@/components/shared";
 import { 
   Zap, 

@@ -6,7 +6,7 @@ import { ArrowLeft, KeyRound } from "lucide-react";
 import { SchemaForm } from "@/components/SchemaForm";
 import { NarrowCol } from "@/components/layout/NarrowCol";
 import { Lead } from "@/components/reader";
-import { useFormSchemaStore } from "@/utility/formSchemaStore"; // ✅ Dodano import
+import { useFormSchemaStore } from "@/utility/llmFormWizard"; // ✅ Dodano import
 
 export const RegisterStep2: React.FC = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 // src/pages/website-analyses/strategy-wizard/StrategyStep2.tsx
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useFormSchemaStore, useLLMOperation } from "@/utility/formSchemaStore";
+import { useFormSchemaStore, useLLMOperation } from "@/utility/llmFormWizard";
 import { Button } from "@/components/ui/button";
 import { STRATEGY_GENERATION_OPERATION } from "./strategyWizard.constants";
 import StepsHeader from "../web-campaign-wizard/StepsHeader";
@@ -12,7 +12,7 @@ export const StrategyStep2: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { getData } = useFormSchemaStore();
   const formData = getData("strategy-wizard");
-  
+
   const llmGeneration = useLLMOperation("strategy-wizard", "generate-strategy");
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export const StrategyStep2: React.FC = () => {
         keywords: formData.keywords,
         industry: formData.industry,
       });
-      
+
       // Po udanym wygenerowaniu przejdź do kroku 3
       navigate(`/website-analyses/${id}/strategy/step3`);
     } catch (error) {
@@ -58,7 +58,9 @@ export const StrategyStep2: React.FC = () => {
         <div className="py-12 text-center space-y-6">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
           <div className="space-y-2">
-            <p className="text-lg font-medium">Generuję strategię marketingową...</p>
+            <p className="text-lg font-medium">
+              Generuję strategię marketingową...
+            </p>
             <p className="text-sm text-gray-600">
               To może potrwać kilkanaście sekund
             </p>
@@ -75,13 +77,13 @@ export const StrategyStep2: React.FC = () => {
             <div className="flex justify-between">
               <Button
                 variant="outline"
-                onClick={() => navigate(`/website-analyses/${id}/strategy/step1`)}
+                onClick={() =>
+                  navigate(`/website-analyses/${id}/strategy/step1`)
+                }
               >
                 Wróć
               </Button>
-              <Button onClick={handleGenerate}>
-                Spróbuj ponownie
-              </Button>
+              <Button onClick={handleGenerate}>Spróbuj ponownie</Button>
             </div>
           </div>
         )}

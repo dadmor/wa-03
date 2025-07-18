@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
 import StepsHero from "./StepsHero";
 import StepsHeader from "./StepsHeader";
 

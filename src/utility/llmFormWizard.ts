@@ -14,12 +14,10 @@ interface SchemaProcess {
 
 type UnregisterMode = "all" | "data";
 
-// ================ NOWE TYPY DLA LLM ================
-
 interface LLMOperationState {
   loading: boolean;
   error: string | null;
-  result?: any; // Opcjonalny rezultat operacji
+  result?: any;
 }
 
 interface LLMConfig {
@@ -39,21 +37,18 @@ interface LLMOperation {
   name: string;
   config: LLMConfig;
   prompt: LLMPrompt;
-  inputMapping?: (data: any) => Record<string, any>; // Mapowanie danych do zmiennych w prompt
-  outputMapping?: (llmResult: any, currentData: any) => any; // Mapowanie wyniku LLM do danych formularza
-  validation?: (result: any) => boolean; // Opcjonalna walidacja wyniku
+  inputMapping?: (data: any) => Record<string, any>;
+  outputMapping?: (llmResult: any, currentData: any) => any;
+  validation?: (result: any) => boolean;
 }
 
-// ================ ROZSZERZONY STORE ================
-
 interface FormSchemaStore {
-  // Oryginalne właściwości
   processes: Record<string, SchemaProcess>;
   formData: Record<string, any>;
 
-  // Nowe właściwości dla LLM
-  llmOperations: Record<string, LLMOperationState>; // klucz: `${processId}-${operationId}`
-  registeredLLMOperations: Record<string, LLMOperation>; // klucz: `${processId}-${operationId}`
+  // właściwości dla LLM
+  llmOperations: Record<string, LLMOperationState>;
+  registeredLLMOperations: Record<string, LLMOperation>;
 
   // Oryginalne metody
   register: (process: SchemaProcess) => void;
@@ -64,7 +59,7 @@ interface FormSchemaStore {
   getData: (processId: string) => any;
   reset: (processId: string) => void;
 
-  // Nowe metody dla LLM
+  // metody dla LLM
   registerLLMOperation: (processId: string, operation: LLMOperation) => void;
   unregisterLLMOperation: (processId: string, operationId: string) => void;
   executeLLMOperation: (
@@ -92,7 +87,6 @@ class GenericLLMService {
     prompt: LLMPrompt,
     variables: Record<string, any> = {}
   ): Promise<any> {
-    // Interpolacja zmiennych w prompt
     const interpolatedPrompt = this.interpolateTemplate(prompt.user, variables);
 
     const payload = {
@@ -119,7 +113,6 @@ class GenericLLMService {
     const result = await response.json();
     let responseText = result.response || result.data || result.text || "";
 
-    // Obsługa odpowiedzi JSON
     if (prompt.responseFormat === "json") {
       responseText = this.cleanJsonResponse(responseText);
       return JSON.parse(responseText);
@@ -138,9 +131,7 @@ class GenericLLMService {
   }
 
   private static cleanJsonResponse(text: string): string {
-    
     return text.replace(/```(?:json)?\s*([\s\S]*?)\s*```/, "$1").trim();
-
   }
 }
 
@@ -339,7 +330,6 @@ export const useFormSchemaStore = create<FormSchemaStore>()(
     {
       name: "form-schema-store",
       version: 2,
-      // Nie persistuj stanów LLM operacji (są one tymczasowe)
       partialize: (state) => ({
         processes: state.processes,
         formData: state.formData,

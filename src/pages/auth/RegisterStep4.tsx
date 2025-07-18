@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { NarrowCol } from "@/components/layout/NarrowCol";
 import { Lead } from "@/components/reader";
-import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
 
 export const RegisterStep4: React.FC = () => {
   const navigate = useNavigate();

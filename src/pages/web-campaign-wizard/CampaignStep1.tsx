@@ -1,7 +1,7 @@
 // pages/campaign/CampaignStep1.tsx - UPDATED WITH CONSTANTS
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormSchemaStore, useLLMOperation } from "@/utility/formSchemaStore";
+import { useFormSchemaStore, useLLMOperation } from "@/utility/llmFormWizard";
 import StepsHero from "./StepsHero";
 import StepsHeader from "./StepsHeader";
 import {

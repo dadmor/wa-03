@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, Loader2, Check, Mail, Shield, User, AlertTriangle, KeyRound, UserCheck } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Mail, Shield, User, AlertTriangle, UserCheck } from "lucide-react";
 import { NarrowCol } from "@/components/layout/NarrowCol";
 import { Lead } from "@/components/reader";
 import { useRegistration } from "@/utility/auth/useRegistration"; // Import custom hook

@@ -2,9 +2,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useFormSchemaStore } from "@/utility/formSchemaStore";
+import { useFormSchemaStore } from "@/utility/llmFormWizard";
 import StepsHero from "./StepsHero";
-import { Edit3, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import StepsHeader from "./StepsHeader";
 
 export const CampaignStep4: React.FC = () => {
@@ -20,7 +20,7 @@ export const CampaignStep4: React.FC = () => {
           title={
             <>
               <Eye className="w-8 h-8 text-zinc-500" />
-              <span>AI przygotowała kompletną strategię marketingową  </span>
+              <span>AI przygotowała kompletną strategię marketingową </span>
             </>
           }
           description="Dostosuj wszystkie elementy kampanii przed zapisaniem"
