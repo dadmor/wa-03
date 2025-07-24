@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 interface GridBoxProps {
   children: ReactNode;
-  variant?: "1-2-3" | "1-2-2" ;
+  variant?: "1-2-3" | "1-2-2"| "1-1-1" ;
   className?: string;
 }
 
@@ -12,6 +12,7 @@ const variantClasses: Record<NonNullable<GridBoxProps["variant"]>, string> = {
  
   "1-2-3": "grid gap-6 md:grid-cols-2 lg:grid-cols-3",
   "1-2-2": "grid gap-6 md:grid-cols-2",
+  "1-1-1": "grid gap-6",
 };
 
 export const GridBox = ({

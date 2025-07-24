@@ -2,7 +2,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -11,10 +10,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, AlertTriangle, Info, Mail, Lock, CheckCircle } from "lucide-react";
+import {
+  Loader2,
+  AlertTriangle,
+  Info,
+  Mail,
+  Lock,
+  CheckCircle,
+} from "lucide-react";
 import { NarrowCol } from "@/components/layout/NarrowCol";
 import { useLoginForm } from "@/utility/auth/useLoginForm";
 import { Link, useSearchParams } from "react-router-dom";
+import { Form, FormActions, FormControl } from "@/components/form";
 
 export const LoginPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -29,8 +36,8 @@ export const LoginPage: React.FC = () => {
   } = useLoginForm();
 
   // Sprawdź parametry URL dla komunikatów
-  const verified = searchParams.get('verified') === 'true';
-  const passwordChanged = searchParams.get('passwordChanged') === 'true';
+  const verified = searchParams.get("verified") === "true";
+  const passwordChanged = searchParams.get("passwordChanged") === "true";
 
   // Funkcja sprawdzająca czy formularz jest prawidłowy
   const isFormValid = email.trim().length > 0 && password.length > 0;
@@ -48,6 +55,18 @@ export const LoginPage: React.FC = () => {
       return Info;
     }
     return AlertTriangle;
+  };
+
+  // Funkcja do walidacji pól
+  const getFieldError = (fieldName: "email" | "password") => {
+    if (!error) return undefined;
+    if (fieldName === "email" && error.toLowerCase().includes("email")) {
+      return "Sprawdź poprawność adresu email";
+    }
+    if (fieldName === "password" && error.toLowerCase().includes("hasło")) {
+      return "Sprawdź poprawność hasła";
+    }
+    return undefined;
   };
 
   return (
@@ -76,17 +95,24 @@ export const LoginPage: React.FC = () => {
             <Alert className="mb-4 border-green-200 bg-green-50">
               <CheckCircle className="h-4 w-4 text-green-600" />
               <AlertDescription className="text-green-800">
-                <strong>Hasło zmienione!</strong> Możesz się zalogować używając nowego hasła.
+                <strong>Hasło zmienione!</strong> Możesz się zalogować używając
+                nowego hasła.
               </AlertDescription>
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center">
-                <Mail className="mr-2 h-4 w-4" />
-                Email
-              </Label>
+          <Form onSubmit={handleSubmit}>
+            <FormControl
+              label={
+                <span className="flex items-center">
+                  <Mail className="mr-2 h-4 w-4" />
+                  Email
+                </span>
+              }
+              htmlFor="email"
+              error={getFieldError("email")}
+              required
+            >
               <Input
                 id="email"
                 type="email"
@@ -94,18 +120,21 @@ export const LoginPage: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
-                required
-                className={
-                  error && error.includes("email") ? "border-red-500" : ""
-                }
+                className={getFieldError("email") ? "border-red-500" : ""}
               />
-            </div>
+            </FormControl>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="flex items-center">
-                <Lock className="mr-2 h-4 w-4" />
-                Hasło
-              </Label>
+            <FormControl
+              label={
+                <span className="flex items-center">
+                  <Lock className="mr-2 h-4 w-4" />
+                  Hasło
+                </span>
+              }
+              htmlFor="password"
+              error={getFieldError("password")}
+              required
+            >
               <Input
                 id="password"
                 type="password"
@@ -113,14 +142,11 @@ export const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
-                required
-                className={
-                  error && error.includes("hasło") ? "border-red-500" : ""
-                }
+                className={getFieldError("password") ? "border-red-500" : ""}
               />
-            </div>
+            </FormControl>
 
-            {/* Wyświetlanie błędów */}
+            {/* Wyświetlanie głównych błędów */}
             {error && (
               <Alert variant={getErrorVariant(error) as any}>
                 {React.createElement(getErrorIcon(error), {
@@ -139,9 +165,9 @@ export const LoginPage: React.FC = () => {
                         <li>Kliknij link aktywacyjny w emailu</li>
                         <li>
                           Jeśli nie otrzymałeś emaila, możesz{" "}
-                          <a href="/resend-confirmation" className="underline">
+                          <Link to="/resend-confirmation" className="underline">
                             wysłać ponownie
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </div>
@@ -164,22 +190,24 @@ export const LoginPage: React.FC = () => {
               </Alert>
             )}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading || !isFormValid}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isLoading ? "Logowanie..." : "Zaloguj się"}
-            </Button>
-          </form>
+            <FormActions className="!border-0 !pt-0 justify-center">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading || !isFormValid}
+              >
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading ? "Logowanie..." : "Zaloguj się"}
+              </Button>
+            </FormActions>
+          </Form>
 
           {/* Linki pomocnicze */}
           <div className="mt-6 space-y-3">
             <div className="text-center text-sm">
               <Link
                 to="/register/step1"
-                className="text-blue-600 hover:text-blue-500"
+                className="text-blue-600 hover:text-blue-500 transition-colors"
               >
                 Nie masz konta? Zarejestruj się
               </Link>
@@ -188,7 +216,7 @@ export const LoginPage: React.FC = () => {
             <div className="text-center text-sm">
               <Link
                 to="/forgot-password"
-                className="text-blue-600 hover:text-blue-500"
+                className="text-blue-600 hover:text-blue-500 transition-colors"
               >
                 Zapomniałeś hasła?
               </Link>
@@ -198,12 +226,12 @@ export const LoginPage: React.FC = () => {
             <div className="border-t pt-4 mt-4">
               <div className="text-center text-xs text-gray-500">
                 <p>Problemy z logowaniem?</p>
-                <a
-                  href="/contact"
-                  className="text-blue-600 hover:text-blue-500"
+                <Link
+                  to="/contact"
+                  className="text-blue-600 hover:text-blue-500 transition-colors"
                 >
                   Skontaktuj się z pomocą techniczną
-                </a>
+                </Link>
               </div>
             </div>
           </div>
