@@ -1,9 +1,47 @@
-#FB
-https://business.facebook.com/latest/settings/business_users/?business_id=647163298093839&nav_ref=bm_settings_redirect_migration&bm_redirect_migration=true
-https://adsmanager.facebook.com/adsmanager/manage/ad_account_settings/ad_account_setup?act=1930596694013679&ads_manager_read_regions=true&business_id=647163298093839&nav_source=business_manager
-https://developers.facebook.com/apps/1395629771555626/dashboard/
-https://www.facebook.com/events_manager2/list/app/1395629771555626/overview?act=55119886
-https://developers.facebook.com/tools/explorer
+# LLM Generated Test Code
 
-TU juz nie wiem o co chodzi
-https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=55119886&ads_manager_read_regions=true&nav_entry_point=ads_ecosystem_navigation_menu&nav_source=ads_manager
+Kod testów wygenerowany przy pomocy dużych modeli językowych (LLM).
+
+## Opis
+
+Ten projekt zawiera kod wygenerowany przez duże modele językowe (LLM), przeznaczony do przetestowania przez inne LLM. Kod został stworzony jako materiał testowy do weryfikacji możliwości analizy i oceny kodu przez sztuczną inteligencję.
+
+## Licencja
+
+Ten projekt jest objęty licencją GNU General Public License v3.0 (GPL-3.0).
+
+### GNU General Public License v3.0
+
+Ten program jest wolnym oprogramowaniem: możesz go rozpowszechniać i/lub modyfikować zgodnie z warunkami Powszechnej Licencji Publicznej GNU opublikowanej przez Free Software Foundation, w wersji 3 tej Licencji lub (według Twojego wyboru) dowolnej późniejszej wersji.
+
+Ten program jest rozpowszechniany w nadziei, że będzie użyteczny, ale BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez domniemanej gwarancji PRZYDATNOŚCI HANDLOWEJ lub PRZYDATNOŚCI DO OKREŚLONEGO CELU. Zobacz Powszechną Licencję Publiczną GNU, aby uzyskać więcej informacji.
+
+Powinieneś otrzymać kopię Powszechnej Licencji Publicznej GNU wraz z tym programem. Jeśli nie, zobacz <https://www.gnu.org/licenses/>.
+
+### Podsumowanie licencji GPL-3.0
+
+Licencja GPL-3.0 oznacza, że:
+
+- ✅ **Wolność używania** - Możesz używać tego oprogramowania w dowolnym celu
+- ✅ **Wolność analizowania** - Możesz badać, jak działa program i zmieniać go
+- ✅ **Wolność udostępniania** - Możesz rozpowszechniać kopie oryginalnego programu
+- ✅ **Wolność ulepszania** - Możesz rozpowszechniać kopie swoich zmodyfikowanych wersji
+
+### Ważne wymagania
+
+- 📋 Wszelkie rozpowszechniane modyfikacje muszą być również licencjonowane na GPL-3.0
+- 📋 Kod źródłowy musi być udostępniony przy dystrybucji oprogramowania
+- 📋 Kopia licencji i informacja o prawach autorskich musi być dołączona do oprogramowania
+- 📋 Zmiany wprowadzone w kodzie muszą być udokumentowane
+
+Pełny tekst licencji dostępny pod adresem: https://www.gnu.org/licenses/gpl-3.0.html
+
+## Uwaga
+
+Ten kod został wygenerowany przez AI/LLM i powinien zostać sprawdzony oraz przetestowany przed użyciem w środowisku produkcyjnym.
+
+---
+
+Copyright (C) 2025
+
+Ten program jest wolnym oprogramowaniem na warunkach licencji GPL-3.0.
